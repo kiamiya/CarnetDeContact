@@ -1,0 +1,69 @@
+﻿<Window x:Class="CarnetDeContact.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CarnetDeContact.Views"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <!--#region Grid Definition-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <!--#endregion-->
+        <!--#region Labels-->
+        <Label Grid.Column="0" Grid.Row="0" Content="Contact" FontSize="24" HorizontalAlignment="Center"></Label>
+        <!--#endregion-->
+        <!--#region DataGrids-->
+        <DataGrid Grid.Row="1" Grid.ColumnSpan="1"
+                  ItemsSource="{Binding Contacts}" 
+                  SelectedItem="{Binding SelectedContact}" 
+                  CanUserDeleteRows="False" CanUserAddRows="True"
+                  AutoGenerateColumns="False" Margin="0,0,0,0"
+                  SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Nom" Binding="{Binding Name}" Width="200"/>
+                <DataGridTextColumn Header="Prénom" Binding="{Binding FirstName}" Width="150"/>
+                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="100"/>
+                <DataGridTextColumn Header="Phone" Binding="{Binding PhoneNumber}" Width="100"/>
+                <DataGridTextColumn Header="Pending Status" Binding="{Binding StatusLabel}" Width="100"/>
+            </DataGrid.Columns>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding StatusLabel}" Value="Deleted">
+                            <Setter Property="Background" Value="Red"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding StatusLabel}" Value="New">
+                            <Setter Property="Background" Value="Green"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding StatusLabel}" Value="Updated">
+                            <Setter Property="Background" Value="Orange"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+        </DataGrid>
+        <!--#endregion-->
+        <!--#region Commands and Load-->
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
+            <Button Content="Save Changes" Command="{Binding SaveCommand}"  Width="100"
+                    HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+
+            <Button Content="Delete" Command="{Binding DeleteCommand}" Width="100"
+                    HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+
+            <Label Content="{Binding StatusLabel}" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalContentAlignment="Top"/>
+
+            <ProgressBar Visibility="{Binding LoadingVisibility}" HorizontalAlignment="Left"
+                         Height="10" Margin="10,10,0,0" VerticalAlignment="Top" Width="100" IsIndeterminate="True" ValueChanged="ProgressBar_ValueChanged"/>
+        </StackPanel>
+        <!--#endregion-->
+    </Grid>
+</Window>
